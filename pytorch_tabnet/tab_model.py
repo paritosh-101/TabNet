@@ -74,6 +74,52 @@ class TabNetClassifier(TabModel):
         outputs = np.argmax(outputs, axis=1)
         return np.vectorize(self.preds_mapper.get)(outputs.astype(str))
 
+    # def predict_proba(self, X):
+    #     """
+    #     Make predictions for classification on a batch (valid) and return embeddings
+
+    #     Parameters
+    #     ----------
+    #     X : a :tensor: `torch.Tensor` or matrix: `scipy.sparse.csr_matrix`
+    #         Input data
+
+    #     Returns
+    #     -------
+    #     res : tuple
+    #         A tuple containing the predicted probabilities and embeddings
+    #     """
+    #     self.network.eval()
+
+    #     if scipy.sparse.issparse(X):
+    #         dataloader = DataLoader(
+    #             SparsePredictDataset(X),
+    #             batch_size=self.batch_size,
+    #             shuffle=False,
+    #         )
+    #     else:
+    #         dataloader = DataLoader(
+    #             PredictDataset(X),
+    #             batch_size=self.batch_size,
+    #             shuffle=False,
+    #         )
+
+    #     results = []
+    #     embeddings = []
+    #     for batch_nb, data in enumerate(dataloader):
+    #         data = data.to(self.device).float()
+
+    #         output, M_loss = self.network(data)
+    #         predictions = torch.nn.Softmax(dim=1)(output).cpu().detach().numpy()
+    #         results.append(predictions)
+
+    #         # Extract embeddings from an intermediate layer
+    #         embedding = self.network.extract_embedding(data)  # Implement this method in the TabNet model
+    #         embeddings.append(embedding.cpu().detach().numpy())
+
+    #     res = np.vstack(results)
+    #     embeddings = np.vstack(embeddings)
+    #     return res, embeddings
+
     def predict_proba(self, X):
         """
         Make predictions for classification on a batch (valid)
