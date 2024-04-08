@@ -193,12 +193,53 @@ class TabNetClassifier(TabModel):
             for batch_nb, data in enumerate(dataloader):
                 data = data.to(self.device).float()
 
-                # Forward pass until the desired embedding layer
-                emb = self.network.embeddings(data)
-                embeddings.append(emb.cpu().detach().numpy())
+                # Forward pass through the embedding layer
+                embedded_x = self.network.embedder(data)
+                embeddings.append(embedded_x.cpu().detach().numpy())
 
         embeddings = np.vstack(embeddings)
         return embeddings
+
+    # def extract_embeddings(self, X):
+    #     """
+    #     Extract embeddings from the model for a given input.
+
+    #     Parameters
+    #     ----------
+    #     X : a :tensor: `torch.Tensor` or matrix: `scipy.sparse.csr_matrix`
+    #         Input data
+
+    #     Returns
+    #     -------
+    #     embeddings : np.ndarray
+    #         Extracted embeddings
+    #     """
+    #     self.network.eval()
+
+    #     if scipy.sparse.issparse(X):
+    #         dataloader = DataLoader(
+    #             SparsePredictDataset(X),
+    #             batch_size=self.batch_size,
+    #             shuffle=False,
+    #         )
+    #     else:
+    #         dataloader = DataLoader(
+    #             PredictDataset(X),
+    #             batch_size=self.batch_size,
+    #             shuffle=False,
+    #         )
+
+    #     embeddings = []
+    #     with torch.no_grad():
+    #         for batch_nb, data in enumerate(dataloader):
+    #             data = data.to(self.device).float()
+
+    #             # Forward pass until the desired embedding layer
+    #             emb = self.network.embeddings(data)
+    #             embeddings.append(emb.cpu().detach().numpy())
+
+    #     embeddings = np.vstack(embeddings)
+    #     return embeddings
 
 
 class TabNetRegressor(TabModel):
